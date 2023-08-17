@@ -24,7 +24,7 @@ This specification describes the protocol for synchronous [CAR Mirror] over [HTT
 
 [CAR Mirror] describes a generic method extending CAR files to efficiently mirror some IPLD graph state on a peer machine. It is transport agnostic.
 
-HTTP is a very mature protocol that connects the applciations and devices that developers — especially web developers — use most fequently. This spec defines how to perform multi-round, syncronous CAR Mirror over HTTP/2.
+HTTP is a very mature protocol that connects the applications and devices that developers — especially web developers — use most frequently. This spec defines how to perform multi-round, synchronous CAR Mirror over HTTP/2.
 
 # 2. Pull
 
