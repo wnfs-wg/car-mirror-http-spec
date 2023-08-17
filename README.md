@@ -107,7 +107,7 @@ The response MUST be serialized as [CBOR].
 
 ```ipldsch
 type PushResponse struct {
-  sr [Link]  -- Incomplete subgraph roots
+  dr [Link]  -- Incomplete DAG roots
   bk Integer -- Bloom filter hash count
   bb Bytes   -- Bloom filter Binary
 }
