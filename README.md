@@ -1,4 +1,4 @@
-# CAR Mirror over HTTP v0.2.0
+# CAR Mirror over HTTP Specification v0.2.0
 
 ## Authors
 
@@ -26,9 +26,17 @@ This specification describes the protocol for synchronous [CAR Mirror] over [HTT
 
 HTTP is a very mature protocol that connects the applications and devices that developers — especially web developers — use most frequently. This spec defines how to perform multi-round, synchronous CAR Mirror over HTTP/2.
 
-# 2. Pull
+# 2 Headers
 
-## 2.1 Endpoint
+Every HTTP request and response MUST include the following header:
+
+| Header Field         | Value   | Description                                           |
+|----------------------|---------|-------------------------------------------------------|
+| `car-mirror-version` | `0.2.0` | The version of this spec that the payload conforms to | 
+
+# 3. Pull
+
+## 3.1 Endpoint
 
 The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 
@@ -38,7 +46,7 @@ POST /api/v0/dag/pull
 
 Since multiple CID roots MAY be requested at once, this information is instead located in the Client Payload.
 
-## 2.2 Client Pull Request
+## 3.2 Client Pull Request
 
 The request MUST be serialized as [CBOR]. 
 
@@ -50,22 +58,22 @@ type PullRequest struct {
 }
 ```
 
-## 2.3 Server Pull Response
+## 3.3 Server Pull Response
 
-The response MUST be given as a [CARv1]. If the streaming flag was set in the URL, then the CAR MUST be a [streaming CARv1].
+The response MUST be given as a [CARv1].
 
 All DAG roots SHOULD be included in the CAR header. There MUST be at least one root.
 
-## 2.4 Status Codes
+## 3.4 Status Codes
 
 Status codes are [as defined in RFC2616 §10][RFC2616 #10], with no additional special meaning. For example, the common cases of success and lack of further CID roots would be:
 
 * Success: `200`
 * Unable to find any new root CIDs: `404`
 
-# 3 Push
+# 4 Push
 
-## 3.1 Endpoint
+## 4.1 Endpoint
 
 The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 
@@ -73,7 +81,7 @@ The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 POST /api/v0/dag/push&diff={ipns | dnslink | cid}
 ```
 
-### 3.1.2 `diff` Parameter
+### 4.1.2 `diff` Parameter
 
 The `diff` field is OPTIONAL. It represents a related CID to the one being pushed, and MAY be an IPNS record, DNSLink, or CID. The complete URI MUST be provided.
 
@@ -83,25 +91,17 @@ This field is primarily useful for the narrowing step, and especially during a c
 
 This field MUST NOT be interpreted as a CID root being sent.
 
-## 3.2 Client Push Request
+## 4.2 Client Push Request
 
 ```ipldsch
-type PushRequestHeader struct {
-  bk Integer -- Bloom filter hash count
-  bb Bytes   -- Bloom filter Binary
-}
-
-type PushRequest struct {
-  hd PushRequestHeader -- Nested (extensible) header map
-  pl CARv1             -- Data payload
-} representation tuple
+type PushRequest = CARv1
 ```
 
-The data payload (`pl`) MUST be encoded as a [CARv1]. If the streaming flag was set in the URL, then the CAR MUST be a [streaming CARv1].
+The data payload MUST be encoded as a [CARv1].
 
 All DAG roots SHOULD be included in the CAR header. There MUST be at least one root.
 
-## 3.3 Server Push Response
+## 4.3 Server Push Response
 
 The response MUST be serialized as [CBOR]. 
 
@@ -113,7 +113,7 @@ type PushResponse struct {
 }
 ```
 
-## 3.4 Server Status Codes
+## 4.4 Server Status Codes
 
 Status codes are [as defined in RFC2616 §10][RFC2616 #10], with no additional special meaning. For example, a few common cases would include:
 
@@ -127,9 +127,7 @@ Status codes are [as defined in RFC2616 §10][RFC2616 #10], with no additional s
 [CARv1]: https://ipld.io/specs/transport/car/carv1/
 [CBOR]: https://cbor.io/
 [Fission]: https://fission.codes
-[HTTP Streaming]: https://datatracker.ietf.org/doc/html/rfc7540#section-5
 [HTTP/2]: https://datatracker.ietf.org/doc/html/rfc7540
 [IPLD Schema]: https://ipld.io/docs/schemas/
 [RFC2119]: https://datatracker.ietf.org/doc/html/rfc2119
 [RFC2616 #10]: https://www.rfc-editor.org/rfc/rfc2616#section-10
-[streaming CARv1]: https://ipld.io/specs/transport/car/carv1/#performance
