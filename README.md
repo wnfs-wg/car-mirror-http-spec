@@ -26,17 +26,9 @@ This specification describes the protocol for synchronous [CAR Mirror] over [HTT
 
 HTTP is a very mature protocol that connects the applications and devices that developers — especially web developers — use most frequently. This spec defines how to perform multi-round, synchronous CAR Mirror over HTTP/2.
 
-# 2 Headers
+# 2. Pull
 
-Every HTTP request and response MUST include the following header:
-
-| Header Field         | Value   | Description                                           |
-|----------------------|---------|-------------------------------------------------------|
-| `car-mirror-version` | `0.2.0` | The version of this spec that the payload conforms to | 
-
-# 3. Pull
-
-## 3.1 Endpoint
+## 2.1 Endpoint
 
 The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 
@@ -44,9 +36,11 @@ The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 POST /api/v0/dag/pull
 ```
 
+If a different endpoint is used, versioning that endpoint is RECOMMENDED to be certain about the version of CAR Mirror being used.
+
 Since multiple CID roots MAY be requested at once, this information is instead located in the Client Payload.
 
-## 3.2 Client Pull Request
+## 2.2 Client Pull Request
 
 The request MUST be serialized as [CBOR]. 
 
@@ -58,22 +52,22 @@ type PullRequest struct {
 }
 ```
 
-## 3.3 Server Pull Response
+## 2.3 Server Pull Response
 
 The response MUST be given as a [CARv1].
 
 All DAG roots SHOULD be included in the CAR header. There MUST be at least one root.
 
-## 3.4 Status Codes
+## 2.4 Status Codes
 
 Status codes are [as defined in RFC2616 §10][RFC2616 #10], with no additional special meaning. For example, the common cases of success and lack of further CID roots would be:
 
 * Success: `200`
 * Unable to find any new root CIDs: `404`
 
-# 4 Push
+# 3 Push
 
-## 4.1 Endpoint
+## 3.1 Endpoint
 
 The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 
@@ -81,7 +75,7 @@ The endpoint MAY be placed at any route, but it is RECOMMENDED to be exposed at:
 POST /api/v0/dag/push&diff={ipns | dnslink | cid}
 ```
 
-### 4.1.2 `diff` Parameter
+### 3.1.2 `diff` Parameter
 
 The `diff` field is OPTIONAL. It represents a related CID to the one being pushed, and MAY be an IPNS record, DNSLink, or CID. The complete URI MUST be provided.
 
@@ -91,7 +85,7 @@ This field is primarily useful for the narrowing step, and especially during a c
 
 This field MUST NOT be interpreted as a CID root being sent.
 
-## 4.2 Client Push Request
+## 3.2 Client Push Request
 
 ```ipldsch
 type PushRequest = CARv1
@@ -101,7 +95,7 @@ The data payload MUST be encoded as a [CARv1].
 
 All DAG roots SHOULD be included in the CAR header. There MUST be at least one root.
 
-## 4.3 Server Push Response
+## 3.3 Server Push Response
 
 The response MUST be serialized as [CBOR]. 
 
@@ -113,7 +107,7 @@ type PushResponse struct {
 }
 ```
 
-## 4.4 Server Status Codes
+## 3.4 Server Status Codes
 
 Status codes are [as defined in RFC2616 §10][RFC2616 #10], with no additional special meaning. For example, a few common cases would include:
 
