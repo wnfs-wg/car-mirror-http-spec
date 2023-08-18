@@ -8,7 +8,7 @@
 
 - [CAR Mirror]
 - [CARv1]
-- [CBOR]
+- [DAG-CBOR]
 - [HTTP/2]
 - [IPLD Schema]
 
@@ -42,7 +42,7 @@ Since multiple CID roots MAY be requested at once, this information is instead l
 
 ## 2.2 Client Pull Request
 
-The request MUST be serialized as [CBOR]. 
+The request MUST be serialized as [DAG-CBOR]. 
 
 ```ipldsch
 type PullRequest struct {
@@ -97,7 +97,7 @@ All DAG roots SHOULD be included in the CAR header. There MUST be at least one r
 
 ## 3.3 Server Push Response
 
-The response MUST be serialized as [CBOR]. 
+The response MUST be serialized as [DAG-CBOR]. 
 
 ```ipldsch
 type PushResponse struct {
@@ -119,7 +119,7 @@ Status codes are [as defined in RFC2616 §10][RFC2616 #10], with no additional s
 [Brooklyn Zelenka]: https://github.com/expede
 [CAR Mirror]: https://github.com/wnfs-wg/car-mirror
 [CARv1]: https://ipld.io/specs/transport/car/carv1/
-[CBOR]: https://cbor.io/
+[DAG-CBOR]: https://ipld.io/specs/codecs/dag-cbor/spec/
 [Fission]: https://fission.codes
 [HTTP/2]: https://datatracker.ietf.org/doc/html/rfc7540
 [IPLD Schema]: https://ipld.io/docs/schemas/
